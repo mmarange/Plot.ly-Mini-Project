@@ -26,12 +26,14 @@ function init() {
     //console.log("----sample values")
     //console.log(sample_values)
     otu_ids = filtered_samples.map(d =>d.otu_ids);
+    [[123]]
     console.log("---ids---")
     console.log(otu_ids)
     otu_labels = filtered_samples.map(d =>d.otu_labels);
     console.log("---labels---")
     console.log(otu_labels)
     var labels = otu_labels[0].slice(0,10).reverse();
+
     var x = sample_values[0].slice(0,10).reverse();
     var y = otu_ids[0].slice(0,10).map(o => `OTU ${o}`).reverse();
     // Use the first sample from the list to build the initial plots
