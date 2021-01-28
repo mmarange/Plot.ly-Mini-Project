@@ -18,7 +18,7 @@ function init() {
     var subject_id = '940';
     //----extract from metadata key-----
     var metadata =  data.metadata;
-    var filtered_meta = metadata.filter(m => m.id == subject_id)
+    var filtered_meta = metadata.filter(m => m.id == subject_id)[0]
     var age = filtered_meta.age
     var bbtype = filtered_meta.bbtype
     var ethnicity = filtered_meta.ethhnicity
@@ -26,8 +26,8 @@ function init() {
     var id = filtered_meta.id
     var location = filtered_meta.location
     var wfreq = filtered_meta.wfreq
-
-    var wfreq = filtered_meta.wfreq
+    console.log('-----wfreq-----') 
+    console.log(wfreq) 
 
     //-----extract from data key-----
     var samples_data = data.samples;
@@ -106,7 +106,45 @@ function init() {
     
     bubbleChart();
     //--------GAUGE--------
-
+    function buildGauge() {
+      var data = [
+      {
+        type: "indicator",
+        mode: "gauge+number+delta",
+        value: wfreq,
+        title: { text: "Speed", font: { size: 24 } },
+        delta: { reference: 6, increasing: { color: "RebeccaPurple" } },
+        gauge: {
+          axis: { range: [null, 10], tickwidth: 1, tickcolor: "darkblue" },
+          bar: { color: "darkblue" },
+          bgcolor: "white",
+          borderwidth: 2,
+          bordercolor: "gray",
+          steps: [
+            { range: [0, 10], color: "cyan" },
+            { range: [5, 8], color: "royalblue" }
+          ],
+          threshold: {
+            line: { color: "red", width: 8 },
+            thickness: 16,
+            value: wfreq
+          }
+        }
+      }
+    ];
+    
+    var layout = {
+      width: 500,
+      height: 400,
+      margin: { t: 25, r: 25, l: 25, b: 25 },
+      paper_bgcolor: "lavender",
+      font: { color: "darkblue", family: "Arial" }
+    };
+    
+    Plotly.newPlot('gauge', data, layout);
+  };
+  buildGauge()
+    
     //--------METADATA--------
 
 
