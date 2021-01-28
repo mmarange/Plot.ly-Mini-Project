@@ -6,7 +6,7 @@ function init() {
    
    console.log("This is running from flask endpoint")
                 /*
-                ge: 24,
+                age: 24,
             bbtype: "I",
             ethnicity: "Caucasian",
             gender: "F",
@@ -16,63 +16,101 @@ function init() {
             */
     // your-code-here 
     var subject_id = '940';
+    //----extract from metadata key-----
+    var metadata =  data.metadata;
+    var filtered_meta = metadata.filter(m => m.id == subject_id)
+    var age = filtered_meta.age
+    var bbtype = filtered_meta.bbtype
+    var ethnicity = filtered_meta.ethhnicity
+    var gender = filtered_meta.gender
+    var id = filtered_meta.id
+    var location = filtered_meta.location
+    var wfreq = filtered_meta.wfreq
+
+    var wfreq = filtered_meta.wfreq
+
+    //-----extract from data key-----
     var samples_data = data.samples;
     var filtered_samples = samples_data.filter(s => s['id'] == subject_id);
 
     console.log(filtered_samples);
 
     sample_values = filtered_samples.map(d =>d.sample_values);
-
     //console.log("----sample values")
     //console.log(sample_values)
+
     otu_ids = filtered_samples.map(d =>d.otu_ids);
-    [[123]]
-    console.log("---ids---")
-    console.log(otu_ids)
+    // console.log("---ids---")
+    // console.log(otu_ids)
+
     otu_labels = filtered_samples.map(d =>d.otu_labels);
-    console.log("---labels---")
-    console.log(otu_labels)
-    var labels = otu_labels[0].slice(0,10).reverse();
+    
+    var otu_labels_plt = otu_labels[0].slice(0,10).reverse();
+    // console.log("---labels---")
+    console.log(otu_labels_plt)
 
-    var x = sample_values[0].slice(0,10).reverse();
-    var y = otu_ids[0].slice(0,10).map(o => `OTU ${o}`).reverse();
+    var sample_values_plt = sample_values[0].slice(0,10).reverse();
+    var otu_ids_plt = otu_ids[0].slice(0,10).map(o => `OTU ${o}`).reverse();
+    var otu_ids_plt2 = otu_ids[0].slice(0,10).reverse();
     // Use the first sample from the list to build the initial plots
-
-
-//  subject_id = '940';
-//       console.log(data);
-//       var samples = data['samples'];
-//       var filtered_samples = samples.filter(s => s['id'] == subject_id);
-//       var sample_values = filtered_samples.map(s => s['sample_values']);
-//       var otu_ids = filtered_samples.map(s => s['otu_ids']);
-//       var otu_labels = ''
-//       var x = sample_values[0].slice(0,10).reverse();
-//       var y = otu_ids[0].slice(0,10).map(o => `OTU ${o}`).reverse();
-//       var data = [{
-//         type: 'bar',
-//         x: x,
-//         y: y,
-//         orientation: 'h'
-//       }];
-//       console.log(sample_values.length);
-//       console.log(otu_ids.length);
-//       Plotly.newPlot('bar', data);
-    //---- Plot.ly HORIZONTAL BAR CHART
-
+    //--------HORIZONTAL BAR GRAPH--------
     function bargraph() {
       var bar_data = [{
         type: 'bar',
-        x: x,
-        y: y,
-        // x: [20, 14, 23],
-        // y: ['giraffes', 'orangutans', 'monkeys'],
-        orientation: 'h'
+        x: sample_values_plt,
+        y: otu_ids_plt,
+        orientation: 'h',
+        text: otu_labels_plt
       }];
+
+      var layout = {
+        title: `Plot showing top 10 OTUs of subject ID: ${subject_id}`,
+        font:{
+          family: 'Raleway, sans-serif'
+        },
+        
+        xaxis: {text: 'Sample Values'},
+        yaxis: {text: 'OTU IDS'}
+      };
       
-      Plotly.newPlot('bar', bar_data);
-    }
+      Plotly.newPlot('bar', bar_data, layout);
+    };
     
-    bargraph()
+    bargraph();
+
+    //--------BUBBLE CHART--------
+    function bubbleChart(){
+      var trace1 = {
+        x: otu_ids_plt2,
+        y: sample_values_plt,
+        text: otu_labels_plt,
+        mode: 'markers',
+        marker: {
+          color: otu_ids_plt2,
+          size: sample_values_plt
+        }
+      };
+      
+      var data = [trace1];
+      
+      var layout = {
+        title:  `Plot showing top 10 OTUs of subject ID: ${subject_id}`,
+        showlegend: false,
+        height: 600,
+        width: 600
+      };
+      
+      Plotly.newPlot('bubble', data, layout);
+
+    };
+    
+    bubbleChart();
+    //--------GAUGE--------
+
+    //--------METADATA--------
+
+
+    //--------EVENT LISTENERS--------
 
   });
 }
